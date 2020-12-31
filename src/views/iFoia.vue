@@ -47,7 +47,10 @@
 </template>
 
 <script>
-import { jsPDF } from "jspdf";
+import Docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import PizZipUtils from "pizzip/utils/index.js";
+import { saveAs } from "file-saver";
 
 export default {
   data () {
@@ -56,13 +59,36 @@ export default {
     }
   },
   methods: {
-    download: function(name) {
-      const doc = new jsPDF();
-      doc.text(`${name}`, 10, 10);
-      doc.save("a4.pdf");
+    renderDoc() {
+      function loadFile(url, callback) {
+        PizZipUtils.getBinaryContent(url, callback);
+      }
+      loadFile(`./foia.docx`, function(
+        error,
+        content
+      ) {
+        if (error) {
+          throw error;
+        }
+        var zip = new PizZip(content);
+        var doc = new Docxtemplater().loadZip(zip);
+        doc.setData({
+          name: "Davide",
+          lastname: "Carnemolla"
+        });
+        
+        doc.render();
+
+        var out = doc.getZip().generate({
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }); //Output the document using Data-URI
+        saveAs(out, "output.docx");
+      });
     },
     submitHandler (data) {
-      this.download(`${data.name}`)
+      this.renderDoc(data)
     }
   }
 }
