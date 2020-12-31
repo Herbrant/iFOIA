@@ -1,58 +1,68 @@
 <template>
-  <div>
-    <b-container>
-  <b-row class="vh-100 text-center" align-v="center">
-    <FormulateForm
-    class="login-form"
-    v-model="formValues"
-  >
-    <h2 class="form-title">iFOIA</h2>
-    <p>
-      Genera la tua richiesta FOIA
-    </p>
-    <div class="double-wide">
+  <b-container>
+    <b-row class="vh-100 text-center" align-v="center">
+      <FormulateForm
+      class="login-form"
+      v-model="formValues"
+      @submit="submitHandler"
+    >
+      <h2 class="form-title">iFOIA</h2>
+      <p>
+        Genera la tua richiesta FOIA
+      </p>
+      <div class="double-wide">
+        <FormulateInput
+          name="name"
+          type="text"
+          label="Nome"
+          placeholder="Mario"
+          validation="required"
+        />
+        <FormulateInput
+          name="lastname"
+          type="text"
+          label="Cognome"
+          placeholder="Rossi"
+          validation="required"
+        />
+      </div>
       <FormulateInput
-        name="name"
-        type="text"
-        label="Nome"
-        placeholder="Mario"
-        validation="required"
+        name="email"
+        type="email"
+        label="Email"
+        placeholder="mariorossi@gmail.com"
+        validation="required|email"
       />
       <FormulateInput
-        name="lastname"
-        type="text"
-        label="Cognome"
-        placeholder="Rossi"
-        validation="required"
+        type="submit"
+        label="Genera"
       />
-    </div>
-    <FormulateInput
-      name="email"
-      type="email"
-      label="Email"
-      placeholder="mariorossi@gmail.com"
-      validation="required|email"
-    />
-    <FormulateInput
-      type="submit"
-      label="Genera"
-    />
-    <pre
-      class="code"
-      v-text="formValues"
-    />
-  </FormulateForm>
-  </b-row>
-</b-container>
-  
-  </div>
+      <pre
+        class="code"
+        v-text="formValues"
+      />
+    </FormulateForm>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
+import { jsPDF } from "jspdf";
+
 export default {
   data () {
     return {
       formValues: {}
+    }
+  },
+  methods: {
+    download: function(name) {
+      const doc = new jsPDF();
+      doc.text(`${name}`, 10, 10);
+      doc.save("a4.pdf");
+    },
+    submitHandler (data) {
+      this.download(`${data.name}`)
     }
   }
 }
