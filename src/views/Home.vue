@@ -11,6 +11,7 @@ import Hello from '@/components/Hello.vue'
 
 export default {
   name: 'Home',
+  title: 'iFOIA',
   components: {
     Hello
   }
