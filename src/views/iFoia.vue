@@ -1,6 +1,8 @@
 <template>
   <b-container>
-    <b-row class="vh-100 text-center" align-v="center">
+    <b-row>
+      <b-col lg="8" style="align-items=center">
+      <div>
       <FormulateForm
       class="login-form"
       v-model="formValues"
@@ -23,17 +25,18 @@
             label="Ente Pubblico"
             validation="required"
           />
+          
       </div>
       <div class="double-wide">
         <FormulateInput
-          name="name"
+          name="nome"
           type="text"
           label="Nome"
           placeholder="Mario"
           validation="required"
         />
         <FormulateInput
-          name="lastname"
+          name="cognome"
           type="text"
           label="Cognome"
           placeholder="Rossi"
@@ -46,12 +49,15 @@
           label="Comune di nascita"
           placeholder="Roma"
           validation="required"
+          :validation-messages="{
+            required: 'Comune di nascita è un campo obbligatiorio.'
+          }"
       />
       <FormulateInput
           name="provincia"
           :options= "province"
           type="select"
-          placeholder="Select an option"
+          placeholder="Seleziona un'opzione"
           label="Provincia"
           validation="required"
       />
@@ -61,6 +67,9 @@
           label="CAP"
           placeholder="-"
           validation="required"
+          :validation-messages="{
+            required: 'CAP è un campo obbligatiorio.'
+          }"
       />
       <FormulateInput
         name="email"
@@ -78,6 +87,8 @@
         v-text="formValues"
       />
     </FormulateForm>
+    </div>
+    </b-col>
     </b-row>
   </b-container>
 </template>
@@ -256,7 +267,7 @@ export default {
   padding: 2em;
   border: 1px solid #a8a8a8;
   border-radius: .5em;
-  max-width: 1000px;
+  max-width: 2000px;
   box-sizing: border-box;
 }
 .form-title {
