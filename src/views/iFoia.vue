@@ -78,6 +78,19 @@
         placeholder="mariorossi@gmail.com"
         validation="required|email"
       />
+
+      <FormulateInput
+        name="foia-type"
+        :options="{documenti: 'Documenti', informazioni: 'Informazioni'}"
+        type="radio"
+        label="Cosa vuoi richiedere?"
+        value="documenti"
+        validation="required"
+        :validation-messages="{
+            required: 'È necessario indicare cosa vuoi richiedere.'
+         }"
+      />
+
       <FormulateInput
         type="submit"
         label="Genera"
@@ -219,11 +232,21 @@ export default {
 
   },
   methods: {
-    renderDoc() {
+    renderDoc(data) {
       function loadFile(url, callback) {
         PizZipUtils.getBinaryContent(url, callback);
       }
-      loadFile(`./foia.docx`, function(
+
+      var file = `./foia_documenti.docx`;
+
+      if (data['foia-type'] == 'documenti') {
+        file = `./foia_documenti.docx`;
+      }
+      else if(data['foia_type'] == 'informazioni'){
+        file = `./foia_informazioni.docx`;
+      }
+
+      loadFile(file, function(
         error,
         content
       ) {
@@ -233,8 +256,8 @@ export default {
         var zip = new PizZip(content);
         var doc = new Docxtemplater().loadZip(zip);
         doc.setData({
-          name: "Davide",
-          lastname: "Carnemolla"
+          nome: data['nome'],
+          cognome: data['cognome']
         });
         
         doc.render();
